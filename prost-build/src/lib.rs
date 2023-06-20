@@ -1318,7 +1318,7 @@ impl Module {
         let mut root = if self.components.is_empty() {
             default.to_owned()
         } else {
-            self.components.join(".")
+            self.components.join("_")
         };
 
         root.push_str(".rs");
@@ -1337,7 +1337,7 @@ impl Module {
     }
 
     fn to_partial_file_name(&self, range: RangeToInclusive<usize>) -> String {
-        self.components[range].join(".")
+        self.components[range].join("_")
     }
 
     fn part(&self, idx: usize) -> &str {
