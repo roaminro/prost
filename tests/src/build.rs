@@ -44,6 +44,7 @@ fn main() {
     config.field_attribute("Foo.Custom.Attrs.AnotherEnum.D", "/// The D docs");
     config.field_attribute("Foo.Custom.Attrs.Msg.field.a", "/// Oneof A docs");
     config.field_attribute("Foo.Custom.Attrs.Msg.field.b", "/// Oneof B docs");
+    config.skip_debug(["custom_debug.Msg"]);
 
     config.file_descriptor_set_path(
         PathBuf::from(env::var("OUT_DIR").expect("OUT_DIR environment variable not set"))
@@ -90,6 +91,26 @@ fn main() {
         .compile_protos(&[src.join("default_string_escape.proto")], includes)
         .unwrap();
 
+    config
+        .compile_protos(&[src.join("custom_debug.proto")], includes)
+        .unwrap();
+
+    config
+        .compile_protos(&[src.join("result_enum.proto")], includes)
+        .unwrap();
+
+    config
+        .compile_protos(&[src.join("result_struct.proto")], includes)
+        .unwrap();
+
+    config
+        .compile_protos(&[src.join("option_enum.proto")], includes)
+        .unwrap();
+
+    config
+        .compile_protos(&[src.join("option_struct.proto")], includes)
+        .unwrap();
+
     prost_build::Config::new()
         .protoc_arg("--experimental_allow_proto3_optional")
         .compile_protos(&[src.join("proto3_presence.proto")], includes)
@@ -126,6 +147,12 @@ fn main() {
             &[src.join("packages/widget_factory.proto")],
             &[src.join("packages")],
         )
+        .unwrap();
+
+    prost_build::Config::new()
+        .enable_type_names()
+        .type_name_domain(&[".type_names.Foo"], "tests")
+        .compile_protos(&[src.join("type_names.proto")], includes)
         .unwrap();
 
     // Check that attempting to compile a .proto without a package declaration does not result in an error.
